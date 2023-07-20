@@ -22,4 +22,24 @@ if (response.statusCode !== 200) {
 
 };
 
-module.exports = { fetchMyIP };
+const fetchCoordsByIP = function(ip, callback) {
+const apiUrl = `http://ipwho.is//${ip}`;
+
+  request.get(apiUrl, (error, response, body) => {
+    if (error) {
+      callback(error, null);
+    } else {
+      try {
+        const data = JSON.parse(body);
+        const lat = data.latitude;
+        const lng = data.longitude;
+        // Pass back latitude and longitude via the callback function
+        callback(error, { lat, lng });
+      } catch (parseError) {
+        callback(parseError, null);
+      }
+    }
+  });
+};
+
+module.exports = { fetchMyIP, fetchCoordsByIP };
